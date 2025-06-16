@@ -12,8 +12,8 @@ class CustomLoginResponse implements LoginResponseContract
         $user = $request->user();
 
         $redirect = match ($user->role) {
-            'admin' => '/admin',
-            'operator' => '/operator',
+            'admin' => '/admin/dashboard',
+            'operator' => '/operator/dashboard',
             default => '/dashboard',
         };
 
