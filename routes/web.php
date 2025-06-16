@@ -13,5 +13,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
 });
 
-require __DIR__.'/settings.php';
-require __DIR__.'/auth.php';
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/admin', fn() => 'Admin Dashboard');
+});
+
+Route::middleware(['auth', 'role:operator'])->group(function () {
+    Route::get('/operator', fn() => 'Operator Dashboard');
+});
+
+require __DIR__ . '/settings.php';
+require __DIR__ . '/auth.php';
