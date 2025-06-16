@@ -38,7 +38,7 @@ export function AppSidebar() {
 
     const role = auth.user?.role;
 
-    // 🟢 Define nav items based on role
+    // Define nav items based on role
     const adminNavItems = [
         { title: 'Admin Dashboard', url: '/admin/dashboard', icon: LayoutGrid },
         { title: 'Shopify Orders', url: '/shopify-orders', icon: Store },
