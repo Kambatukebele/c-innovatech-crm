@@ -13,14 +13,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(LoginResponse::class, CustomLoginResponse::class);
     }
 
     /**
      * Bootstrap any application services.
      */
-    public function boot(): void
-    {
-        $this->app->singleton(LoginResponse::class, CustomLoginResponse::class);
-    }
+    public function boot(): void {}
 }
