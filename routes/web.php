@@ -2,6 +2,7 @@
 
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\OrderController;
 
 Route::get('/', function () {
@@ -12,9 +13,7 @@ Route::get('/', function () {
 Route::middleware(['auth'])->group(function () {
     // Admin dashboard - only for users with 'admin' role
     Route::middleware(['role:admin'])->group(function () {
-        Route::get('/admin/dashboard', function () {
-            return Inertia::render('Admin/Dashboard');
-        })->name('admin.dashboard');
+        Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
         Route::get('/admin/dashboard/orders', [OrderController::class, 'index'])
             ->name('orders.index');
         Route::post('admin/dashboard/orders/{order}/fulfill', [OrderController::class, 'fulfill'])->name('orders.fulfill');
