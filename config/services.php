@@ -34,5 +34,10 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
+    'traxis' => [
+        'api_key' => env('TRAXIS_API_KEY'),
+        'account' => env('TRAXIS_ACCOUNT'),
+    ],
+
 
 ];

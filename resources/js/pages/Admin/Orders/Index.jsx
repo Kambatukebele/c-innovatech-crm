@@ -1,7 +1,9 @@
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
-import { Head, usePage } from '@inertiajs/react';
+import { Head, router, usePage } from '@inertiajs/react';
+import { AlertTriangle, CheckCircle } from 'lucide-react';
 
 const breadcrumbs = [
     {
@@ -11,18 +13,28 @@ const breadcrumbs = [
 ];
 
 export default function Index() {
-    const { orders } = usePage().props;
-    console.log(orders);
-
-    const parsedItems = JSON.parse(orders[0].items);
-    console.log(parsedItems);
+    const { orders, flash } = usePage().props;
 
     const handleFulfill = (id) => {
-        router.post(`/orders/${id}/fulfill`);
+        router.post(`/admin/dashboard/orders/${id}/fulfill`);
     };
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Shopify Orders" />
+            {flash?.success && (
+                <Alert className="my-4" variant="success">
+                    <CheckCircle className="h-4 w-4" />
+                    <AlertTitle>Success</AlertTitle>
+                    <AlertDescription>{flash.success}</AlertDescription>
+                </Alert>
+            )}
+            {flash?.error && (
+                <Alert className="my-4" variant="destructive">
+                    <AlertTriangle className="h-4 w-4" />
+                    <AlertTitle>Error</AlertTitle>
+                    <AlertDescription>{flash.error}</AlertDescription>
+                </Alert>
+            )}
             <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
                 {orders.length === 0 ? (
                     <p>No pending orders yet.</p>
@@ -46,7 +58,11 @@ export default function Index() {
                                         <TableCell className="text-left">{customer_name}</TableCell>
                                         <TableCell className="text-left">{email}</TableCell>
                                         <TableCell className="text-left">
-                                            <Button variant={`${status === 'pending' ? 'destructive' : 'bg-green-900'}`} className="cursor-pointer">
+                                            <Button
+                                                onClick={() => handleFulfill(id)}
+                                                variant={`${status === 'pending' ? 'destructive' : 'bg-green-900'}`}
+                                                className="cursor-pointer"
+                                            >
                                                 {status}
                                             </Button>
                                         </TableCell>
