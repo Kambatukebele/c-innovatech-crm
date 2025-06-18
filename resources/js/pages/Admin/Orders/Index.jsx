@@ -12,71 +12,73 @@ const breadcrumbs = [
     },
 ];
 
-export default function Index() {
+export default function ShopifyOrdersIndex() {
     const { orders, flash } = usePage().props;
 
     const handleFulfill = (id) => {
         router.post(`/admin/dashboard/orders/${id}/fulfill`);
     };
+
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Shopify Orders" />
-
-            {flash?.success && (
-                <Alert variant="default" className="mb-4">
-                    <CheckCircle className="h-5 w-5 text-green-600" />
-                    <AlertTitle>Success</AlertTitle>
-                    <AlertDescription>{flash.success}</AlertDescription>
-                </Alert>
-            )}
-
-            {flash?.error && (
-                <Alert variant="destructive" className="mb-4">
-                    <AlertTriangle className="h-5 w-5 text-red-600" />
-                    <AlertTitle>Error</AlertTitle>
-                    <AlertDescription>{flash.error}</AlertDescription>
-                </Alert>
-            )}
-
-            <div className="rounded-xl border bg-white p-6 shadow-sm">
-                <h2 className="mb-4 text-xl font-semibold">Pending Shopify Orders</h2>
-
-                {orders.length === 0 ? (
-                    <div className="flex h-32 items-center justify-center text-gray-500">No pending orders yet.</div>
-                ) : (
-                    <Table>
-                        <TableCaption className="mb-4">A list of your recent Shopify orders.</TableCaption>
-                        <TableHeader>
-                            <TableRow>
-                                <TableHead>Order ID</TableHead>
-                                <TableHead>Customer Name</TableHead>
-                                <TableHead>Email</TableHead>
-                                <TableHead>Status</TableHead>
-                            </TableRow>
-                        </TableHeader>
-
-                        <TableBody>
-                            {orders.map((order) => {
-                                const { id, customer_name, email, shopify_order_id, status } = order;
-
-                                const statusColor = status === 'pending' ? 'destructive' : 'secondary';
-
-                                return (
-                                    <TableRow key={id}>
-                                        <TableCell>{shopify_order_id}</TableCell>
-                                        <TableCell>{customer_name}</TableCell>
-                                        <TableCell>{email}</TableCell>
-                                        <TableCell>
-                                            <Button onClick={() => handleFulfill(id)} variant={statusColor} className="text-white capitalize">
-                                                {status}
-                                            </Button>
-                                        </TableCell>
-                                    </TableRow>
-                                );
-                            })}
-                        </TableBody>
-                    </Table>
+            <div className="flex flex-1 flex-col gap-6 p-6">
+                {/* Alerts */}
+                {flash?.success && (
+                    <Alert variant="default">
+                        <CheckCircle className="h-5 w-5 text-green-600" />
+                        <AlertTitle>Success</AlertTitle>
+                        <AlertDescription>{flash.success}</AlertDescription>
+                    </Alert>
                 )}
+                {flash?.error && (
+                    <Alert variant="destructive">
+                        <AlertTriangle className="h-5 w-5 text-red-600" />
+                        <AlertTitle>Error</AlertTitle>
+                        <AlertDescription>{flash.error}</AlertDescription>
+                    </Alert>
+                )}
+
+                {/* Order Table */}
+                <div>
+                    <h2 className="mb-6 text-xl font-semibold text-gray-800">Pending Shopify Orders</h2>
+
+                    {orders.length === 0 ? (
+                        <div className="text-muted-foreground flex h-32 items-center justify-center">No pending orders yet.</div>
+                    ) : (
+                        <div className="overflow-x-auto rounded-lg border">
+                            <Table>
+                                <TableCaption className="text-muted-foreground">A list of your recent Shopify orders.</TableCaption>
+                                <TableHeader>
+                                    <TableRow className="bg-muted text-muted-foreground">
+                                        <TableHead>Order ID</TableHead>
+                                        <TableHead>Customer Name</TableHead>
+                                        <TableHead>Email</TableHead>
+                                        <TableHead>Status</TableHead>
+                                    </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                    {orders.map(({ id, customer_name, email, shopify_order_id, status }) => (
+                                        <TableRow key={id} className="hover:bg-muted/50">
+                                            <TableCell>{shopify_order_id}</TableCell>
+                                            <TableCell>{customer_name}</TableCell>
+                                            <TableCell>{email}</TableCell>
+                                            <TableCell>
+                                                <Button
+                                                    onClick={() => handleFulfill(id)}
+                                                    variant={status === 'pending' ? 'destructive' : 'secondary'}
+                                                    className="text-white capitalize"
+                                                >
+                                                    {status}
+                                                </Button>
+                                            </TableCell>
+                                        </TableRow>
+                                    ))}
+                                </TableBody>
+                            </Table>
+                        </div>
+                    )}
+                </div>
             </div>
         </AppLayout>
     );

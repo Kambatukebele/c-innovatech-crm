@@ -135,4 +135,25 @@ class OrderController extends Controller
 
         return back()->with('error', 'Failed to send order to fulfillment.');
     }
+    public function sent(Request $request)
+    {
+        $query = Order::where('status', 'sent');
+
+        if ($request->filled('search')) {
+            $query->where('shopify_order_id', 'like', '%' . $request->search . '%');
+        }
+
+        $orders = $query->orderBy('created_at', 'desc')->paginate(10)->withQueryString();
+
+        return Inertia::render('Admin/Orders/Sent', [
+            'orders' => $orders,
+            'filters' => $request->only('search'),
+        ]);
+    }
+    public function show(Order $order)
+    {
+        return Inertia::render('Admin/Orders/Show', [
+            'order' => $order,
+        ]);
+    }
 }
