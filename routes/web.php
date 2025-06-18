@@ -18,6 +18,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admin/dashboard/orders', [OrderController::class, 'index'])
             ->name('orders.index');
         Route::post('admin/dashboard/orders/{order}/fulfill', [OrderController::class, 'fulfill'])->name('orders.fulfill');
+        Route::get('/admin/dashboard/orders/sent', [OrderController::class, 'sent'])->name('admin.orders.sent');
+        Route::get('/admin/dashboard/orders/{order}', [OrderController::class, 'show'])
+            ->name('admin.orders.show');
     });
 
     // Operator dashboard - only for users with 'operator' role
