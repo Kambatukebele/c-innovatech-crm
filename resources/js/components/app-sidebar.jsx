@@ -6,42 +6,25 @@ import { Link, usePage } from '@inertiajs/react';
 import { BookOpen, Folder, LayoutGrid, Store } from 'lucide-react';
 import AppLogo from './app-logo';
 
-// const mainNavItems = [
-//     {
-//         title: 'Dashboard',
-//         url: '/dashboard',
-//         icon: LayoutGrid,
-//     },
-//     {
-//         title: 'Shopify Orders',
-//         url: '/shopify-orders',
-//         icon: Store,
-//     },
-// ];
-
-// const footerNavItems = [
-//     {
-//         title: 'Repository',
-//         url: 'https://github.com/laravel/react-starter-kit',
-//         icon: Folder,
-//     },
-//     {
-//         title: 'Documentation',
-//         url: 'https://laravel.com/docs/starter-kits',
-//         icon: BookOpen,
-//     },
-// ];
-
 export function AppSidebar() {
     const { auth } = usePage().props;
-    console.log(auth.user.role);
-
     const role = auth.user?.role;
 
-    // Define nav items based on role
     const adminNavItems = [
-        { title: 'Admin Dashboard', url: '/admin/dashboard', icon: LayoutGrid },
-        { title: 'Shopify Orders', url: '/admin/dashboard/orders', icon: Store },
+        {
+            title: 'Admin Dashboard',
+            url: '/admin/dashboard',
+            icon: LayoutGrid,
+        },
+        {
+            title: 'Shopify Orders',
+            icon: Store,
+            children: [
+                { title: 'All Orders', url: '/admin/dashboard/orders' },
+                { title: 'Pending Orders', url: '/admin/dashboard/orders?status=pending' },
+                { title: 'Sent Orders', url: '/admin/dashboard/orders?status=sent' },
+            ],
+        },
     ];
 
     const operatorNavItems = [{ title: 'Operator Dashboard', url: '/operator/dashboard', icon: LayoutGrid }];
@@ -49,16 +32,8 @@ export function AppSidebar() {
     const mainNavItems = role === 'admin' ? adminNavItems : operatorNavItems;
 
     const footerNavItems = [
-        {
-            title: 'Repository',
-            url: 'https://github.com/laravel/react-starter-kit',
-            icon: Folder,
-        },
-        {
-            title: 'Documentation',
-            url: 'https://laravel.com/docs/starter-kits',
-            icon: BookOpen,
-        },
+        { title: 'Repository', url: 'https://github.com/laravel/react-starter-kit', icon: Folder },
+        { title: 'Documentation', url: 'https://laravel.com/docs/starter-kits', icon: BookOpen },
     ];
 
     return (
@@ -67,7 +42,7 @@ export function AppSidebar() {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <Link href={role === 'admin' ? '/admin/dashboard' : '/operator/dashboard'} prefetch>
+                            <Link href={role === 'admin' ? '/admin/dashboard' : '/operator/dashboard'}>
                                 <AppLogo />
                             </Link>
                         </SidebarMenuButton>
