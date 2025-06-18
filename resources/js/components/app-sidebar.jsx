@@ -20,9 +20,8 @@ export function AppSidebar() {
             title: 'Shopify Orders',
             icon: Store,
             children: [
-                { title: 'All Orders', url: '/admin/dashboard/orders' },
-                { title: 'Pending Orders', url: '/admin/dashboard/orders?status=pending' },
-                { title: 'Sent Orders', url: '/admin/dashboard/orders?status=sent' },
+                { title: 'Pending Orders', url: '/admin/dashboard/orders' },
+                { title: 'Sent Orders', url: '/admin/dashboard/orders/sent' },
             ],
         },
     ];
