@@ -21,48 +21,53 @@ export default function Index() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Shopify Orders" />
+
             {flash?.success && (
-                <Alert className="my-4" variant="success">
-                    <CheckCircle className="h-4 w-4" />
+                <Alert variant="default" className="mb-4">
+                    <CheckCircle className="h-5 w-5 text-green-600" />
                     <AlertTitle>Success</AlertTitle>
                     <AlertDescription>{flash.success}</AlertDescription>
                 </Alert>
             )}
+
             {flash?.error && (
-                <Alert className="my-4" variant="destructive">
-                    <AlertTriangle className="h-4 w-4" />
+                <Alert variant="destructive" className="mb-4">
+                    <AlertTriangle className="h-5 w-5 text-red-600" />
                     <AlertTitle>Error</AlertTitle>
                     <AlertDescription>{flash.error}</AlertDescription>
                 </Alert>
             )}
-            <div className="flex h-full flex-1 flex-col gap-4 rounded-xl p-4">
+
+            <div className="rounded-xl border bg-white p-6 shadow-sm">
+                <h2 className="mb-4 text-xl font-semibold">Pending Shopify Orders</h2>
+
                 {orders.length === 0 ? (
-                    <p>No pending orders yet.</p>
+                    <div className="flex h-32 items-center justify-center text-gray-500">No pending orders yet.</div>
                 ) : (
                     <Table>
-                        <TableCaption>A list of your recent invoices.</TableCaption>
+                        <TableCaption className="mb-4">A list of your recent Shopify orders.</TableCaption>
                         <TableHeader>
                             <TableRow>
-                                <TableHead className="text-left">Shopify Order ID</TableHead>
-                                <TableHead className="text-left">Customer name</TableHead>
-                                <TableHead className="text-left">Email</TableHead>
-                                <TableHead className="text-left">Status</TableHead>
+                                <TableHead>Order ID</TableHead>
+                                <TableHead>Customer Name</TableHead>
+                                <TableHead>Email</TableHead>
+                                <TableHead>Status</TableHead>
                             </TableRow>
                         </TableHeader>
+
                         <TableBody>
                             {orders.map((order) => {
-                                const { id, customer_name, email, shopify_order_id, items, status } = order;
+                                const { id, customer_name, email, shopify_order_id, status } = order;
+
+                                const statusColor = status === 'pending' ? 'destructive' : 'secondary';
+
                                 return (
                                     <TableRow key={id}>
-                                        <TableCell className="text-left">{shopify_order_id}</TableCell>
-                                        <TableCell className="text-left">{customer_name}</TableCell>
-                                        <TableCell className="text-left">{email}</TableCell>
-                                        <TableCell className="text-left">
-                                            <Button
-                                                onClick={() => handleFulfill(id)}
-                                                variant={`${status === 'pending' ? 'destructive' : 'bg-green-900'}`}
-                                                className="cursor-pointer"
-                                            >
+                                        <TableCell>{shopify_order_id}</TableCell>
+                                        <TableCell>{customer_name}</TableCell>
+                                        <TableCell>{email}</TableCell>
+                                        <TableCell>
+                                            <Button onClick={() => handleFulfill(id)} variant={statusColor} className="text-white capitalize">
                                                 {status}
                                             </Button>
                                         </TableCell>
