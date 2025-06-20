@@ -31,15 +31,22 @@ class OrderController extends Controller
             return back()->with('error', 'No shipping address found.');
         }
 
+        // Determine if order is COD
+        $isCod = collect($shopify->payment_gateway_names ?? [])->contains(function ($gateway) {
+            return str_contains(strtolower($gateway), 'cod') || str_contains(strtolower($gateway), 'cash');
+        });
+
+        $codAmount = $isCod ? floatval($shopify->total_price ?? 0) : 0;
+
         $payload = [
             "Shipping" => [
-                "Account" => "TEST",
+                "Account" => "CITS",
                 "Reference" => 'SHOP-' . $order->shopify_order_id,
                 "TransitGatewayId" => "CDG",
                 "Agent" => "FR-NTUPS",
                 "ServiceCode" => "ECO",
-                "COD" => 0,
-                "OnLineCOD" => 0,
+                "COD" => $codAmount,
+                "OnLineCOD" => $codAmount,
                 "IOSS" => "",
                 "Incoterm" => "DDP",
                 "WeightUnit" => "kg",
@@ -47,24 +54,6 @@ class OrderController extends Controller
                 "Currency" => "EUR",
                 "OrderFulfillment" => true,
                 "Warehouse" => "CDG"
-            ],
-            "Shipper" => [
-                "CompanyName" => "C-InnovaTech Solutions",
-                "ContactName" => "Cherpa Lupembe",
-                "Street" => "rue François 1er",
-                "AddressLine2" => "60",
-                "AddressLine3" => "",
-                "PostCode" => "75008",
-                "City" => "Paris",
-                "State" => "",
-                "Country" => "FR",
-                "Email" => "support@c-innovatech.com",
-                "Phone" => "+41786276258",
-                "SecondPhone" => "",
-                "Eori" => "",
-                "Notes" => "",
-                "Reference1" => "",
-                "Reference2" => ""
             ],
             "Consignee" => [
                 "CompanyName" => "",
@@ -84,16 +73,6 @@ class OrderController extends Controller
                 "Reference1" => "",
                 "Reference2" => ""
             ],
-            "Pieces" => [
-                [
-                    "Number" => "",
-                    "Reference" => "",
-                    "Weight" => 0,
-                    "Length" => 0,
-                    "Width" => 0,
-                    "Height" => 0
-                ]
-            ],
             "Items" => collect(json_decode($order->items))->map(function ($item) {
                 return [
                     "Code" => $item->sku ?? 'NO-SKU',
@@ -106,22 +85,14 @@ class OrderController extends Controller
                     "Weight" => 0,
                     "Dutiable" => true
                 ];
-            })->toArray(),
-            "Services" => [
-                [
-                    "Code" => "",
-                    "Description" => "",
-                    "PDF" => ""
-                ]
-            ],
-            "Attachments" => [
-                [
-                    "Type" => "Invoice",
-                    "Base64" => "", // Optional: Add base64 PDF here if needed
-                    "FileType" => "pdf"
-                ]
-            ]
+            })->toArray()
         ];
+        // return response(
+        //     "<pre>" . json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) . "</pre>",
+        //     200,
+        //     ['Content-Type' => 'text/html']
+        // );
+
 
         $response = Http::withHeaders([
             'apiKey' => config('services.traxis.api_key'),
