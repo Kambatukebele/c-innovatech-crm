@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import AppLayout from '@/layouts/app-layout';
 import { Head, Link, usePage } from '@inertiajs/react';
-import { ArrowRight, BarChart, Eye, PackageCheck, PackageSearch, PackageX } from 'lucide-react';
+import { ArrowRight, BarChart, Contact, Eye, PackageCheck, PackageSearch, PackageX, Users } from 'lucide-react';
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
 
 const COLORS = ['#6b7280', '#9ca3af', '#d1d5db']; // light gray tones
@@ -24,13 +24,11 @@ export default function Dashboard() {
         { name: 'Failed', value: stats.failed || 0 },
     ];
 
-    const widgetClasses = 'flex items-center gap-4 p-4 bg-gray-100 rounded-xl shadow-sm';
-
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Admin Dashboard" />
             <div className="flex flex-1 flex-col gap-6 p-6">
-                <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-3">
+                <div className="mb-6 grid grid-cols-1 gap-6 md:grid-cols-3 lg:grid-cols-5">
                     <Card className="bg-gray-50">
                         <CardHeader className="flex flex-row items-center gap-4">
                             <PackageSearch className="h-5 w-5 text-gray-500" />
@@ -58,6 +56,26 @@ export default function Dashboard() {
                         </CardHeader>
                         <CardContent>
                             <p className="text-2xl font-semibold text-green-600">{stats.fulfilled}</p>
+                        </CardContent>
+                    </Card>
+
+                    <Card className="bg-gray-50">
+                        <CardHeader className="flex flex-row items-center gap-4">
+                            <Users className="h-5 w-5 text-blue-500" />
+                            <CardTitle>Leads</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <p className="text-2xl font-semibold text-blue-600">{stats.leads}</p>
+                        </CardContent>
+                    </Card>
+
+                    <Card className="bg-gray-50">
+                        <CardHeader className="flex flex-row items-center gap-4">
+                            <Contact className="h-5 w-5 text-purple-500" />
+                            <CardTitle>Operators</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <p className="text-2xl font-semibold text-purple-600">{stats.operators}</p>
                         </CardContent>
                     </Card>
                 </div>
