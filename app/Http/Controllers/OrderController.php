@@ -31,13 +31,14 @@ class OrderController extends Controller
             return back()->with('error', 'No shipping address found.');
         }
 
-        // Determine if order is COD
-        $isCod = collect($shopify->payment_gateway_names ?? [])->contains(function ($gateway) {
-            return str_contains(strtolower($gateway), 'cod') || str_contains(strtolower($gateway), 'cash');
-        });
+        // Determine if payment is COD
+        $paymentGateway = $shopify->payment_gateway_names[0] ?? null;
+        $isCOD = str_contains(strtolower($paymentGateway), 'cod') || str_contains(strtolower($paymentGateway), 'cash');
 
-        $codAmount = $isCod ? floatval($shopify->total_price ?? 0) : 0;
+        // Set COD value
+        $codAmount = $isCOD ? floatval($shopify->total_price) : 0;
 
+        //payload data
         $payload = [
             "Shipping" => [
                 "Account" => "CITS",
@@ -46,7 +47,7 @@ class OrderController extends Controller
                 "Agent" => "FR-NTUPS",
                 "ServiceCode" => "ECO",
                 "COD" => $codAmount,
-                "OnLineCOD" => $codAmount,
+                "OnLineCOD" => $codAmount > 0 ? $codAmount : 0,
                 "IOSS" => "",
                 "Incoterm" => "DDP",
                 "WeightUnit" => "kg",
@@ -87,24 +88,24 @@ class OrderController extends Controller
                 ];
             })->toArray()
         ];
-        // return response(
-        //     "<pre>" . json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) . "</pre>",
-        //     200,
-        //     ['Content-Type' => 'text/html']
-        // );
+        return response(
+            "<pre>" . json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) . "</pre>",
+            200,
+            ['Content-Type' => 'text/html']
+        );
 
 
-        $response = Http::withHeaders([
-            'apiKey' => config('services.traxis.api_key'),
-            'Content-Type' => 'application/json',
-        ])->post('https://traxis.app/external/api/shipments/booking', $payload);
+        // $response = Http::withHeaders([
+        //     'apiKey' => config('services.traxis.api_key'),
+        //     'Content-Type' => 'application/json',
+        // ])->post('https://traxis.app/external/api/shipments/booking', $payload);
 
-        if ($response->successful()) {
-            $order->update(['status' => 'sent']);
-            return back()->with('success', 'Order sent to fulfillment successfully.');
-        }
+        // if ($response->successful()) {
+        //     $order->update(['status' => 'sent']);
+        //     return back()->with('success', 'Order sent to fulfillment successfully.');
+        // }
 
-        return back()->with('error', 'Failed to send order to fulfillment.');
+        // return back()->with('error', 'Failed to send order to fulfillment.');
     }
     public function sent(Request $request)
     {
