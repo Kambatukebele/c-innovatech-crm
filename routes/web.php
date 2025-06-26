@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LeadController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\OperatorController;
 
 Route::get('/', function () {
     return Inertia::render('welcome');
@@ -26,6 +27,11 @@ Route::middleware(['auth'])->group(function () {
         //Admin Leads
         Route::get('admin/dashboard/leads', [LeadController::class, 'index'])->name('admin.leads.index');
         Route::post('admin/dashboard/leads/{lead}/assign', [LeadController::class, 'assign'])->name('admin.leads.assign');
+
+        //Admin Operators
+        Route::prefix('admin/dashboard')->group(function () {
+            Route::resource('operators', OperatorController::class)->except(['show'])->names('admin.operators');
+        });
     });
 
     // Operator dashboard - only for users with 'operator' role

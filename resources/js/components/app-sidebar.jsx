@@ -3,7 +3,7 @@ import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Scaling, Store } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid, PhoneCall, Scaling, Store } from 'lucide-react';
 import AppLogo from './app-logo';
 
 export function AppSidebar() {
@@ -28,6 +28,14 @@ export function AppSidebar() {
             title: 'Client Leads',
             url: '/admin/dashboard/leads',
             icon: Scaling,
+        },
+        {
+            title: 'Operators',
+            icon: PhoneCall,
+            children: [
+                { title: 'Create Operator', url: '/admin/dashboard/operators/create' },
+                { title: 'View All Operators', url: '/admin/dashboard/operators/' },
+            ],
         },
     ];
 
