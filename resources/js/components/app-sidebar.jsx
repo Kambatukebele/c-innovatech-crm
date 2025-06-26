@@ -3,7 +3,7 @@ import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid, Store } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid, Scaling, Store } from 'lucide-react';
 import AppLogo from './app-logo';
 
 export function AppSidebar() {
@@ -23,6 +23,11 @@ export function AppSidebar() {
                 { title: 'Pending Orders', url: '/admin/dashboard/orders' },
                 { title: 'Sent Orders', url: '/admin/dashboard/orders/sent' },
             ],
+        },
+        {
+            title: 'Client Leads',
+            url: '/admin/dashboard/leads',
+            icon: Scaling,
         },
     ];
 
