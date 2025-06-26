@@ -25,6 +25,7 @@ Route::middleware(['auth'])->group(function () {
             ->name('admin.orders.show');
         //Admin Leads
         Route::get('admin/dashboard/leads', [LeadController::class, 'index'])->name('admin.leads.index');
+        Route::post('admin/dashboard/leads/{lead}/assign', [LeadController::class, 'assign'])->name('admin.leads.assign');
     });
 
     // Operator dashboard - only for users with 'operator' role

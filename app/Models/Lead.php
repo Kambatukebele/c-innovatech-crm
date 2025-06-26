@@ -12,4 +12,9 @@ class Lead extends Model
         'email',
         'product',
     ];
+
+    public function assignedOperator()
+    {
+        return $this->belongsTo(User::class, 'assigned_to');
+    }
 }

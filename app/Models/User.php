@@ -55,4 +55,9 @@ class User extends Authenticatable
     {
         return $this->role == 'operator';
     }
+
+    public function assignedLeads()
+    {
+        return $this->hasMany(Lead::class, 'assigned_to');
+    }
 }

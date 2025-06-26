@@ -12,7 +12,7 @@ class LeadController extends Controller
     {
         $search = $request->input('search');
 
-        $leads = Lead::query()
+        $leads = Lead::with('assignedOperator') // eager load the operator
             ->when($search, function ($query, $search) {
                 $query->where('name', 'like', "%{$search}%")
                     ->orWhere('email', 'like', "%{$search}%")
@@ -22,13 +22,31 @@ class LeadController extends Controller
             ->paginate(10)
             ->withQueryString();
 
+        $operators = \App\Models\User::where('role', 'operator')->get(['id', 'name']);
+
         return Inertia::render('Admin/Leads/Index', [
             'leads' => $leads,
             'filters' => [
                 'search' => $search,
             ],
+            'operators' => $operators,
         ]);
     }
+
+
+    public function assign(Request $request, Lead $lead)
+    {
+        $request->validate([
+            'assigned_to' => ['required', 'exists:users,id'],
+        ]);
+
+        $lead->assigned_to = $request->assigned_to;
+        $lead->save();
+
+        return back()->with('success', 'Lead assigned successfully.');
+    }
+
+
     public function store(Request $request)
     {
         $data = $request->validate([
