@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
-import { useForm } from '@inertiajs/react-hooks';
+import { useForm } from '@inertiajs/react';
 
 export default function Edit({ operator }) {
     const { data, setData, patch, processing, errors } = useForm({
